@@ -13,3 +13,4 @@ while True:
     response, history = vllm_model.chat(query=Q,
                                         history=history)
     print(response)
+    history=history[:5]
