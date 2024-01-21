@@ -14,7 +14,7 @@ TokensType = List[int]
 BatchTokensType = List[List[int]]
 
 def get_stop_words_ids(tokenizer):
-    stop_words_ids = [[tokenizer.im_end_id]]
+    stop_words_ids = [[tokenizer.im_end_id],[tokenizer.eos_token_id],[tokenizer.im_start_id]]
     return stop_words_ids
 
 # 构造transformer模型的输入
@@ -171,7 +171,7 @@ class vLLMWrapper:
         prompt_str = req_output.prompt
         
         output_str = req_output.outputs[0].text
-        output_str=output_str.replace(IMEND,"")
+        output_str=output_str.replace(IMEND,"").replace(ENDOFTEXT,"")
 
         # 历史对话
         history.append((prompt_str,output_str))
