@@ -121,7 +121,8 @@ class vLLMWrapper:
         # 构造prompt
         prompt_text,prompt_tokens=self.build_prompt(self.tokenizer,query,history=history,system=system)
         
-        print(prompt_text)
+        # 打开注释，观测底层Prompt构造
+        # print(prompt_text)
 
         # VLLM请求配置
         sampling_params=SamplingParams(stop_token_ids=stop_words_ids, 
