@@ -5,7 +5,8 @@ model = "qwen/Qwen-7B-Chat-Int4"
 vllm_model = vLLMWrapper(model,
                             quantization = 'gptq',
                             dtype="float16",
-                            tensor_parallel_size=1)
+                            tensor_parallel_size=1,
+                            gpu_memory_utilization=0.6)
 
 history=None 
 while True:

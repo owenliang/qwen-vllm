@@ -45,7 +45,7 @@ class vLLMWrapper:
                        tensor_parallel_size=tensor_parallel_size,
                        trust_remote_code=True,
                        quantization=quantization,
-                       gpu_memory_utilization=gpu_memory_utilization,
+                       gpu_memory_utilization=gpu_memory_utilization, # 0.6
                        dtype=dtype)
     
     # 按chatml格式构造千问的Prompt
@@ -139,6 +139,9 @@ class vLLMWrapper:
         
         # transformer模型的原生返回
         response=req_output.outputs[0].text
+        # 打开注释，观测底层Response长相
+        # print(response)
+        
         # 清楚可能出现的内置终止词
         for token_id in self.stop_words_ids:
             response=response.replace(self.tokenizer.decode(token_id),'')
