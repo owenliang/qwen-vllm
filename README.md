@@ -11,7 +11,24 @@ vllm_wrapper.py实现参考了[Qwen官方实现](https://github.com/QwenLM/Qwen/
 - torch安装2.1
 - 安装vllm gptq量化版, 安装时命令采用pip install . -i https://mirrors.aliyun.com/pypi/simple/
 - 安装modelscope，命令pip install modelscope -i https://mirrors.aliyun.com/pypi/simple/
-- 安装千问的toktoken分词库 pip install tiktoken -i https://mirrors.aliyun.com/pypi/simple/
+- 安装千问的tiktoken分词库 pip install tiktoken -i https://mirrors.aliyun.com/pypi/simple/
+
+## 离线推理
+
+```
+python client.py
+提问:hello
+Processed prompts: 100%|████████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  1.38it/s]
+Hello! How can I help you today? Is there something on your mind that you would like to talk about or ask me about? I'm here to listen and help if I can. Just let me know what's on your mind.
+```
+
+## 在线推理
+
+启动vllm apiserver:
+```
+VLLM_USE_MODELSCOPE=True python api_server.py --model qwen/Qwen-7B-Chat-Int4 --tokenizer qwen/Qwen-7B-Chat-Int4 --dtype float16 --gpu-memory-utilization 0.6 --quantization gptq --trust-remote-code --tensor-parallel-size 1 --max-num-seqs 2
+```
+
 
 ## 底层原理
 
