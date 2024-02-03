@@ -2,7 +2,18 @@
 
 [千问官方部署文档](https://github.com/QwenLM/Qwen?tab=readme-ov-file#deployment)
 
-vllm_wrapper.py实现参考了[Qwen官方实现](https://github.com/QwenLM/Qwen/blob/main/examples/vllm_wrapper.py)
+* 离线推理vllm_wrapper.py实现参考了[Qwen官方实现](https://github.com/QwenLM/Qwen/blob/main/examples/vllm_wrapper.py)
+* 在线推理vllm_server.py和vllm_client.py实现参考了[vLLM官方实现-异步服务端](https://github.com/vllm-project/vllm/blob/main/vllm/entrypoints/api_server.py)、[vLLM官方实现-异步客户端](https://github.com/vllm-project/vllm/blob/main/examples/api_client.py)
+
+
+# 核心技术原理
+
+本项目旨在探索生产环境下的高并发推理服务端搭建方法，核心工作非常清晰，边角细节没有投入太多精力，希望对大家有帮助
+
+* vLLM支持Continuous batching of incoming requests高并发批推理机制，其SDK实现是在1个独立线程中运行推理并且对用户提供请求排队合批机制，能够满足在线服务的高吞吐并发服务能力
+* vLLM提供asyncio封装，在主线程中基于uvicorn+fastapi封装后的asyncio http框架，可以实现对外HTTP接口服务，并将请求提交到vLLM的队列进入到vLLM的推理线程进行continuous batching批量推理，主线程异步等待推理结果，并将结果返回到HTTP客户端
+* vLLM天然支持流式返回next token，基于fastapi可以按chunk流式返回流式推理成果，在客户端基于requests库流式接收chunk并复写控制台展示，实现了流式响应效果
+
 
 ## 安装注意
 
@@ -15,22 +26,31 @@ vllm_wrapper.py实现参考了[Qwen官方实现](https://github.com/QwenLM/Qwen/
 
 ## 离线推理
 
+python程序直接拉起模型，本地推理的方式。
+
 ```
-python client.py
-提问:hello
-Processed prompts: 100%|████████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  1.38it/s]
-Hello! How can I help you today? Is there something on your mind that you would like to talk about or ask me about? I'm here to listen and help if I can. Just let me know what's on your mind.
+python vllm_offline.py
+提问:你好
+你好！有什么我能帮你的吗？
+提问:没事
+好的，如果你需要任何帮助，请随时告诉我。
 ```
 
 ## 在线推理
 
-启动vllm apiserver:
+启动一个远端python http服务端，通过http客户端调用的方式，并且可以流式返回推理结果。
+
+启动HTTP服务端:
 ```
-VLLM_USE_MODELSCOPE=True python api_server.py --model qwen/Qwen-7B-Chat-Int4 --tokenizer qwen/Qwen-7B-Chat-Int4 --dtype float16 --gpu-memory-utilization 0.6 --quantization gptq --trust-remote-code --tensor-parallel-size 1 --max-num-seqs 2
+python vllm_server.py
 ```
 
+启动HTTP客户端
+```
+python vllm_client.py
+```
 
-## 底层原理
+## 通义千问Prompt原理
 
 1.8B预训练版本，训练数据：
 

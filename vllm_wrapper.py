@@ -3,7 +3,7 @@ import os
 from vllm import LLM
 from vllm.sampling_params import SamplingParams
 from modelscope import AutoTokenizer, GenerationConfig
-from prompt_tpl import _build_prompt
+from prompt_utils import _build_prompt
 
 # 通义千问的特殊token
 IMSTART='<|im_start|>'  
@@ -75,7 +75,7 @@ class vLLMWrapper:
                                          max_tokens=self.generation_config.max_new_tokens)
         
         # 调用VLLM执行推理（批次大小1）
-        req_outputs=self.model.generate(prompt_token_ids=[prompt_tokens],sampling_params=sampling_params)
+        req_outputs=self.model.generate(prompt_token_ids=[prompt_tokens],sampling_params=sampling_params,use_tqdm=False) # use_tqdm禁止进度条
         req_output=req_outputs[0]    
         
         # transformer模型的原生返回
