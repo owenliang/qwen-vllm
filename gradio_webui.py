@@ -25,7 +25,7 @@ with gr.Blocks(css='.qwen-logo img {height:200px; width:600px; margin:0 auto;}')
     with gr.Row():
         chatbot=gr.Chatbot(label='通义千问14B-Chat-Int4')
     with gr.Row():
-        query_box=gr.Textbox(label='提问',autofocus=True)
+        query_box=gr.Textbox(label='提问',autofocus=True,lines=5)
     with gr.Row():
         clear_btn=gr.ClearButton([query_box,chatbot],value='清空历史')
         submit_btn=gr.Button(value='提交')
@@ -38,8 +38,8 @@ with gr.Blocks(css='.qwen-logo img {height:200px; width:600px; margin:0 auto;}')
             history.pop(0)
     
     # 提交query
-    query_box.submit(chat,[query_box,chatbot],[query_box,chatbot])
     submit_btn.click(chat,[query_box,chatbot],[query_box,chatbot])
+    query_box.submit(chat,[query_box,chatbot],[query_box,chatbot])
 
 if __name__ == "__main__":
     app.queue(200)  # 请求队列
