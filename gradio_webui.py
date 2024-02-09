@@ -2,7 +2,7 @@ import gradio as gr
 import requests
 import json
 
-MAX_HISTORY_LEN=5
+MAX_HISTORY_LEN=50
 
 def chat_streaming(query,history):
     # 调用api_server
@@ -39,7 +39,7 @@ with gr.Blocks(css='.qwen-logo img {height:200px; width:600px; margin:0 auto;}')
     
     # 提交query
     submit_btn.click(chat,[query_box,chatbot],[query_box,chatbot])
-    query_box.submit(chat,[query_box,chatbot],[query_box,chatbot])
+    # query_box.submit(chat,[query_box,chatbot],[query_box,chatbot])
 
 if __name__ == "__main__":
     app.queue(200)  # 请求队列
