@@ -50,6 +50,16 @@ python vllm_server.py
 python vllm_client.py
 ```
 
+## webui
+
+启动vllm_server后，可以再单独运行gradio_webui.py，它是基于gradio实现的聊天webui，支持多轮对话和流式应答，底层会与vllm_server实时远程调用。
+
+```
+python gradio_webui.py
+```
+
+![](webui.png)
+
 ## 通义千问Prompt原理
 
 1.8B预训练版本，训练数据：
