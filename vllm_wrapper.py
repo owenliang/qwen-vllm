@@ -2,7 +2,7 @@ import copy
 import os 
 from vllm import LLM
 from vllm.sampling_params import SamplingParams
-from modelscope import AutoTokenizer, GenerationConfig
+from modelscope import AutoTokenizer, GenerationConfig, snapshot_download
 from prompt_utils import _build_prompt
 
 # 通义千问的特殊token
@@ -32,6 +32,9 @@ class vLLMWrapper:
             "transformers_version": "4.31.0"
             }
         '''
+        
+        # 模型下载
+        snapshot_download(model_dir)
         self.generation_config = GenerationConfig.from_pretrained(model_dir,trust_remote_code=True)
         
         # 加载分词器

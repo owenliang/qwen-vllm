@@ -1,7 +1,7 @@
 import os 
 from vllm import AsyncEngineArgs,AsyncLLMEngine
 from vllm.sampling_params import SamplingParams
-from modelscope import AutoTokenizer, GenerationConfig
+from modelscope import AutoTokenizer, GenerationConfig,snapshot_download
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, Response, StreamingResponse
 import uvicorn
@@ -22,7 +22,8 @@ dtype='float16'
 # vLLM模型加载
 def load_vllm():
     global generation_config,tokenizer,stop_words_ids,engine    
-    
+    # 模型下载
+    snapshot_download(model_dir)
     # 模型基础配置
     generation_config=GenerationConfig.from_pretrained(model_dir,trust_remote_code=True)
     # 加载分词器
