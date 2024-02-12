@@ -5,7 +5,7 @@ from modelscope import AutoTokenizer, GenerationConfig,snapshot_download
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, Response, StreamingResponse
 import uvicorn
-from prompt_utils import _build_prompt
+from prompt_utils import _build_prompt,remove_stop_words
 import uuid
 import json 
 
@@ -79,9 +79,8 @@ async def chat(request: Request):
     if stream:
         async def streaming_resp():
             async for result in results_iter:
-                text=result.outputs[0].text
-                for token_id in stop_words_ids:
-                    text=text.replace(tokenizer.decode(token_id),'') 
+                token_ids=remove_stop_words(result.outputs[0].token_ids,stop_words_ids)
+                text=tokenizer.decode(token_ids)
                 yield (json.dumps({'text':text})+'\0').encode('utf-8')
         return StreamingResponse(streaming_resp())
 

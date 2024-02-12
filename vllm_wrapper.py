@@ -3,7 +3,7 @@ import os
 from vllm import LLM
 from vllm.sampling_params import SamplingParams
 from modelscope import AutoTokenizer, GenerationConfig, snapshot_download
-from prompt_utils import _build_prompt
+from prompt_utils import _build_prompt,remove_stop_words
 
 # 通义千问的特殊token
 IMSTART='<|im_start|>'  
@@ -81,14 +81,13 @@ class vLLMWrapper:
         req_outputs=self.model.generate(prompt_token_ids=[prompt_tokens],sampling_params=sampling_params,use_tqdm=False) # use_tqdm禁止进度条
         req_output=req_outputs[0]    
         
-        # transformer模型的原生返回
-        response=req_output.outputs[0].text
-        # 打开注释，观测底层Response长相
-        # print(response)
+        # transformer模型的原生返回, 打开注释看一下原始推理结果
+        # raw_response=req_output.outputs[0].text
+        # print(raw_response)
         
-        # 清除可能出现的内置终止词
-        for token_id in self.stop_words_ids:
-            response=response.replace(self.tokenizer.decode(token_id),'')
+        # 移除停用词        
+        response_token_ids=remove_stop_words(req_output.outputs[0].token_ids,stop_words_ids)
+        response=self.tokenizer.decode(response_token_ids)
 
         # 整理历史对话
         history.append((query,response))

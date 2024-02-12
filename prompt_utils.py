@@ -1,3 +1,5 @@
+import copy 
+
 # 按chatml格式构造千问的Prompt
 def _build_prompt(
                 generation_config,
@@ -58,3 +60,13 @@ def _build_prompt(
     prompt_str=f'{system_text}{history_text}{query_text}'
     prompt_tokens=system_tokens+history_tokens+query_tokens
     return prompt_str,prompt_tokens
+
+# 停用词清理
+def remove_stop_words(token_ids,stop_words_ids):
+    token_ids=copy.deepcopy(token_ids)
+    while len(token_ids)>0:
+        if token_ids[-1] in stop_words_ids:
+            token_ids.pop(-1)
+        else:
+            break
+    return token_ids
