@@ -9,7 +9,7 @@ def chat_streaming(query,history):
     response=requests.post('http://localhost:8000/chat',json={
         'query':query,
         'stream': True,
-        'history':history,
+        'history':history
     },stream=True)
     
     # 流式读取http response body, 按\0分割
