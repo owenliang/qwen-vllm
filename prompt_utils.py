@@ -53,6 +53,7 @@ def _build_prompt(
         if len(cur_history_tokens)<=left_token_space:
             history_text=cur_history_text+history_text
             history_tokens=cur_history_tokens+history_tokens
+            left_token_space-=len(cur_history_tokens)
         else:
             break 
             
