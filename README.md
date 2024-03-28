@@ -4,6 +4,7 @@
 
 * 离线推理vllm_wrapper.py实现参考了[Qwen官方实现](https://github.com/QwenLM/Qwen/blob/main/examples/vllm_wrapper.py)
 * 在线推理vllm_server.py和vllm_client.py实现参考了[vLLM官方实现-异步服务端](https://github.com/vllm-project/vllm/blob/main/vllm/entrypoints/api_server.py)、[vLLM官方实现-异步客户端](https://github.com/vllm-project/vllm/blob/main/examples/api_client.py)
+* 使用vllm_server_qwen2.py实现Qwen1.5系列模型的服务部署，使用/customized_chat接口实现自定义生成参数的服务调用。
 
 
 # 核心技术原理
